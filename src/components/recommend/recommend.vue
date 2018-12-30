@@ -1,6 +1,12 @@
 <template>
   <div class="recommend" ref="recommend">
-    <div class="search">
+    <div class="view-area">
+    <transition name="header">
+    <div class="header" 
+      v-show="!searchShow"
+    >为你推荐</div>
+    </transition>
+    <div class="search" ref="search1">
       <i class="l icon-search"></i>
       <input
         type="text"
@@ -18,40 +24,30 @@
         @_selectZhida="selectZhida"
       ></search>
     </div>
-    <div v-if="recommends.length" class="slider-wrapper">
-      <div class="slider-content" ref="aaa">
-        <slider :recommends="recommends" @sliderHeight="_sliderHeight"></slider>
-      </div>
-    </div>
-    <div class="scroll-area" :style="sliderFilter">
       <scroll
-        :data="discList"
         class="recommend-content"
         ref="recommendContent"
         @scroll="scroll"
         :listenScroll="true"
         :probeType="3"
       >
-        <div class="recommend-songs">
-          <h5 v-if="discList.length">热门歌单推荐</h5>
-          <ul class="disc-list">
-            <li v-for="item in discList" :key="item.listnum" @click="selectDisc(item)">
-              <div class="disc-icon">
-                <img :src="item.imgurl" alt>
-              </div>
-              <div class="filter"></div>
-              <div class="disc-text">
-                <div class="title">{{item.creator.name | _discTitle}}</div>
-                <div class="line"></div>
-                <div class="text">{{item.dissname}}</div>
-              </div>
-            </li>
-          </ul>
+        <div class="recommend-songs" ref="recommendSongs">
+          <div class="tags">
+            <ul>
+              <li v-for="(a,index) in albumTitle" :key="index"><span @click="changeAlbumIndex(index)" :class="{active:albumIndex===index}">{{a.item_name | filterTitle}}</span></li>             
+            </ul>
+          </div>
+          <keep-alive><disc v-if="albumIndex===0&&discShow===0" @selectDisc="selectDisc" :discList="discList[0]" :index="albumIndex"></disc></keep-alive>
+          <keep-alive><disc v-if="albumIndex===1&&discShow===1" @selectDisc="selectDisc" :discList="discList[1]" :index="albumIndex"></disc></keep-alive>
+          <keep-alive><disc v-if="albumIndex===2&&discShow===2" @selectDisc="selectDisc" :discList="discList[2]" :index="albumIndex"></disc></keep-alive>
+          <keep-alive><disc v-if="albumIndex===3&&discShow===3" @selectDisc="selectDisc" :discList="discList[3]" :index="albumIndex"></disc></keep-alive>
+          <keep-alive><disc v-if="albumIndex===4&&discShow===4" @selectDisc="selectDisc" :discList="discList[4]" :index="albumIndex"></disc></keep-alive>
+          <keep-alive><disc v-if="albumIndex===5&&discShow===5" @selectDisc="selectDisc" :discList="discList[5]" :index="albumIndex"></disc></keep-alive>
         </div>
       </scroll>
-    </div>
-    <div class="loading-container" v-if="!discList.length">
+    <div class="loading-container" v-if="albumIndex!==discShow">
       <loading></loading>
+    </div>
     </div>
     <router-view></router-view>
   </div>
@@ -60,25 +56,33 @@
 <script>
 import slider from "base/slider/slider";
 import radio from "components/radioList";
-import { getDiscList, getRadioList } from "api/recommend";
+import { getRadioList ,getDistItem,getDiscList} from "api/recommend";
 import scroll from "base/scroll/scroll";
 import loading from "base/loading/loading";
 import { adaptMiniPlay } from "common/js/mixin";
 import { mapMutations } from "vuex";
 import search from "components/search/search";
+import disc from "components/disc/disc";
+
 export default {
   mixins: [adaptMiniPlay],
   data() {
     return {
-      radioLists: [],
       recommends: [],
-      discList: [],
+      discList: {},
       currentDot: -1,
       searchText: "",
-      sliderHeight: 0,
       scrollY: 0,
-      searchShow: false
+      searchShow: false,
+      albumIndex:0,
+      albumTitle:[],
+      discShow:""
     };
+  },
+  filters:{
+    filterTitle(val){
+      return val.substring(0,2);
+    }
   },
   computed: {
     // recommendStyle(){
@@ -86,23 +90,51 @@ export default {
     //         "top" : `${this.sliderHeight}px`
     //     }
     // },
-    sliderFilter() {
-      if (-this.scrollY > 0 && -this.scrollY < this.sliderHeight) {
-        let opacity = this.rang(-this.scrollY, this.sliderHeight, 1);
-        return {
-          background: `rgba(0,0,0,${opacity})`
-        };
-      }
-    }
+    // sliderFilter() {
+      // if (-this.scrollY > 0 && -this.scrollY < this.sliderHeight) {
+      //   let opacity = this.rang(-this.scrollY, this.sliderHeight, 1);
+      //   return {
+      //     background: `rgba(0,0,0,${opacity})`
+      //   };
+      // }
+      
+    // }
   },
   components: {
     slider,
     radio,
     scroll,
     loading,
-    search
+    search,
+    disc
   },
   methods: {
+    _getDistItem(){
+      getDistItem().then(data => {
+        this.albumTitle = data.splice(0,6);
+        this.changeAlbumIndex(0);
+      })
+    },
+    changeAlbumIndex(index){
+      this.albumIndex = index;
+      if(this.discList[index]&&this.discList[index].length){
+        this.discShow = index;
+        return
+      }
+      getDiscList(this.albumTitle[index].item_id).then(data => {
+        this.discList[index]=data.map(item => {
+          let {cover_url_medium,title,tid} = item;
+          let l = {
+                    imgurl:cover_url_medium,
+                    dissname:title,
+                    dissid:tid,
+                    name:item.creator_info.nick
+                  }
+          return l;
+        })
+        this.discShow = index;
+      })
+    },
     selectHotKey(k) {
       this.searchText = k;
     },
@@ -131,21 +163,10 @@ export default {
       this.$refs.recommendContent.$el.style.top = x + "px";
       this.$refs.recommendContent.refresh();
     },
-    _getRadioList() {
-      getRadioList().then(
-        data => {
-          this.radioLists = data.radioList;
-          this.recommends = data.slider;
-        },
-        err => {
-          console.log(err);
-        }
-      );
-    },
     _getDiscList() {
       getDiscList().then(
         res => {
-          this.discList = res;
+          this.discList.push(res);
         },
         err => {
           console.log(err);
@@ -163,20 +184,30 @@ export default {
     },
     scroll(pos) {
       this.scrollY = parseInt(pos.y);
+      let r = this.$refs.recommendSongs;
+      let s = this.$refs.search;
+      if(pos.y<0){
+        r.style.boxShadow = "0 -10px 10px rgba(0,0,0,0.2)";
+        s.style.zIndex = "0";
+        if(-pos.y>78){
+          this.$refs.recommend.style.borderTop = "1px solid rgb(221,221,221)"
+        }else{
+          this.$refs.recommend.style.borderTop = "none"
+        }
+      }
+      else{
+        r.style.boxShadow = "none";
+        s.style.zIndex = "99";
+      }
+
     },
     rang(now, total, max) {
       return Math.min((max * now) / total, max);
     },
     ...mapMutations(["SET_SINGER"])
   },
-  filters: {
-    _discTitle(val) {
-      return val.replace(/QQ|qq|腾讯/, "");
-    }
-  },
   created() {
-    this._getRadioList();
-    this._getDiscList();
+    this._getDistItem();
   },
   mounted() {}
 };
@@ -189,21 +220,38 @@ export default {
   position: fixed;
   width: 100%;
   top: 44px;
-  bottom: 0; //设置 fixed top bottom 使该元素获得固定的高度
+  bottom: 0; 
+  .view-area{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  .header{
+    color: #000;
+    box-sizing: border-box;
+    padding-left:10px;
+    height: 40px;
+    line-height: 40px;
+    font-size: @font-size-large-x;
+  }
   .search {
-    padding: 8px;
-    background: @color-theme;
+    padding: 5px 10px;
+    position: relative;
     input {
       width: 100%;
       height: 27px;
       line-height: 27px;
-      background: @color-theme-d;
+      background: rgb(236, 236, 236);
       border-radius: 3px;
-      color: @color-text-ll;
+      color:#000;
       padding: 0 25px;
       box-sizing: border-box;
     }
-    .placeholderStyle();
+    input::-webkit-input-placeholder {
+      color: @color-text-d;
+      font-size: @font-size-medium;
+      text-align: center;
+    }
     i {
       display: inline-block;
       width: 27px;
@@ -220,19 +268,11 @@ export default {
       }
     }
   }
-  .scroll-area {
-    position: fixed;
-    top: 87px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: hidden;
-  }
   .recommend-content {
     position: absolute; //为了使该元素高度固定，则子元素的高度会大于该元素，就可以用scroll
     bottom: 0;
     width: 100%;
+    top: 77px;
   }
   .slider-content {
     width: 100%;
@@ -253,59 +293,48 @@ export default {
     text-align: center;
     background: @color-background;
     border-radius: 5px;
-    h5 {
-      padding: 10px 0;
-      color: @color-theme;
-    }
-    .disc-list {
-      padding: 0 10px;
-      li {
+    .tags{
+      height: 50px;
+      position: relative;
+      box-sizing: border-box;
+      padding-top: 10px;
+      width: 100%;
+      overflow: hidden;
+      .tags-content{
+        position: absolute;
+        left: 10px;
+        right: 10px;
+        top: 10px;
+        bottom: 0;
+      }
+      ul{
         width: 100%;
-        height: 100px;
-        margin-bottom: 20px;
-        border-radius: 2px;
-        box-sizing: border-box;
-        overflow: hidden;
-        position: relative;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-        .disc-icon {
-          width: 100px;
-          height: 100%;
-          position: absolute;
-          right: 0;
-          img {
-            max-width: 100%;
-            height: 100px;
-            // filter: blur(5px);
+        display: flex;
+        li{
+          flex: 1;
+          span{
+            color: #000;
+            height: 25px;
+            line-height: 25px;
+            padding:5px;
+            font-size: 14px;
           }
-        }
-        .disc-text {
-          position: absolute;
-          width: 50%;
-          top: 20px;
-          left: 10px;
-          color: #000;
-          text-align: left;
-          .title {
-            font-size: @font-size-large;
-            font-weight: bold;
-            margin-bottom: 10px;
-          }
-          .line {
-            width: 40px;
-            height: 4px;
-            background-color: #000;
-            margin-bottom: 10px;
-          }
-          .text {
-            color: @color-text-d;
-            font-size: @font-size-medium;
-            .no-wrap();
-          }
+          .active{
+              color: #fff;
+              background-color: #000;
+              border-radius:15px;
+            }
         }
       }
     }
+
   }
+}
+.header-enter,.header-leave-to{
+  margin-top: -40px;
+}
+.header-enter-active,.header-leave-active{
+  transition: .2s;
 }
 </style>
 

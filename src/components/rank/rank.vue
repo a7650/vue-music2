@@ -158,7 +158,7 @@ export default {
         justify-content: space-between;
         color: @color-theme;
         background: rgb(245, 245, 245);
-        box-shadow: 0 0 5px rgba(0, 0, 0, .15);
+        box-shadow: 0 0 3px rgba(0, 0, 0, .15);
         .title{
             font-weight: bold;
             .no-wrap;

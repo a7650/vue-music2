@@ -72,9 +72,15 @@ export default {
             return `${song.singer} - ${song.album}`
         },
         _selectSong(song,index,filterList){
+            if(!song.url){
+                return
+            }
             this.$emit("selectSong",song,index,filterList);
         },
         selectMore(song){
+            if(!song.url){
+                return
+            }
             this.$emit("selectMore",song)
         },
         audioPlay(song){
@@ -128,7 +134,7 @@ export default {
             width: 100%;
             height: 100%;
             border-radius: 2px;
-            background: rgba(0, 0, 0, .07)
+            background: rgb(236, 236, 236);
         }
     }
     .zhida{

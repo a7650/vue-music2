@@ -48,6 +48,9 @@ export default {
     },
     methods:{
         selectSong(song,index,filterList){
+            if(!song.url){
+                return
+            }
             this.$emit("selectSong",song,index,filterList)
         },
         audioPlay(song){
@@ -59,6 +62,9 @@ export default {
             }
         },
         selectMore(song,index){
+            if(!song.url){
+                return
+            }
             this.$emit("selectMore",song,index);
         }
     }

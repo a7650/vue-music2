@@ -198,6 +198,7 @@ export default {
     bottom: 0;
     right: 0;
     background: @color-background;
+    z-index: 99;
     .bg{
         width: 100%;
         height: 0;

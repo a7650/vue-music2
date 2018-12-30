@@ -427,8 +427,10 @@ export default {
   watch: {
     currentSong(newSong, oldSong) {
       if (!newSong.id || !newSong.url || newSong.id === oldSong.id) {
+        this.nextSong()
         return;
       }
+
       this.readyPlay = false;
       this.ready = false;
       if (this.currentLyric) {

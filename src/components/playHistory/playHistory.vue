@@ -96,6 +96,7 @@ export default {
   bottom: 0;
   right: 0;
   color: #000;
+  overflow: hidden;
   .song-content {
     position: absolute;
     top: 0;

@@ -281,7 +281,7 @@ export default {
 @import "~common/stylus/mixin";
 .search-content {
   position: fixed;
-  top: 87px;
+  top: 76px;
   left: 0;
   bottom: 0;
   right: 0;
@@ -292,7 +292,6 @@ export default {
     position: absolute;
     width: 100%;
     height: 40px;
-    background-color: rgba(0, 0, 0, 0.05);
     top: 0;
     div {
       width: 100%;
@@ -320,6 +319,7 @@ export default {
     padding: 10px 20px;
     box-sizing: border-box;
     .hot {
+      height: 88px;
         header{
             color: @color-text-d;
         }
@@ -336,12 +336,18 @@ export default {
       }
     }
     .search-history{
-        margin-top: 10px;
+      position: absolute;
+      top: 88px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      box-sizing: border-box;
+      padding:20px;
         .history-content{
           position: absolute;
           left: 0;
           right: 0;
-          top: 140px;
+          top: 50px;
           bottom: 0;
           overflow: hidden;
           padding: 0 20px;
@@ -350,6 +356,7 @@ export default {
             width: 100%;
             height: 30px;
             line-height: 30px;
+            background: #fff;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             span{
                 color: @color-text-d;
@@ -392,9 +399,10 @@ export default {
     }
   }
 }
-.search-content-enter-active,
-.search-content-leave-active {
+.search-content-enter-active
+{
   transition: 0.2s;
+  transition-delay: .1s;
 }
 .search-content-enter,
 .search-content-leave-to {
@@ -403,12 +411,12 @@ export default {
 
 .hot-enter,
 .hot-leave-to {
-  // margin-top: 400px;
+  margin-top: 200px;
   opacity: 0;
 }
 .hot-enter-active,
 .hot-leave-active {
-  transition: 0.5s;
+  transition: 0.3s;
 }
 </style>
 

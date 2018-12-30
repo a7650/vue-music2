@@ -82,10 +82,10 @@ export default {
     }
 }
 .alert-enter-active{
-    animation: bounce .3s;
+    animation: bounce .2s;
 }
 .alert-leave-active{
-    transition: .3s;
+    transition: .2s;
 }
 .alert-leave-to{
     opacity: 0;
@@ -93,10 +93,7 @@ export default {
 @keyframes bounce{
     0%{
         opacity: 0;
-        transform: scale(0)
-    }
-    50%{
-        transform: scale(1.2)
+        transform: scale(1.4)
     }
     100%{
         transform: scale(1)

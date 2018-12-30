@@ -7,7 +7,7 @@
           <header>我创建的歌单</header>
           <div
             v-for="(item,index) in createAlbum"
-            class="album"
+            class="album1"
             :key="index"
             @click="selectCreateAlbum(item)"
           >
@@ -20,7 +20,7 @@
           <header>我收藏的歌单</header>
           <div
             v-for="(item,index) in collectAlbum"
-            class="album"
+            class="album1"
             :key="index"
             @click="selectCollectAlbum(item)"
           >
@@ -36,7 +36,6 @@
   </div>
   </transition>
 </template>
-
 <script>
 import scroll from "base/scroll/scroll";
 import { adaptMiniPlay } from "common/js/mixin";
@@ -114,6 +113,7 @@ export default {
   bottom: 0;
   right: 0;
   color: #000;
+  
   .album-content {
     position: absolute;
     top: 10px;
@@ -128,13 +128,13 @@ export default {
       width: 100%;
       height: 30px;
       font-size: @font-size-medium;
-      background: rgb(239, 239, 239);
+      background: rgb(247, 247, 247);
       box-sizing: border-box;
       padding-left: 20px;
       line-height: 30px;
-      color: rgb(110, 110, 110);
+      color: rgb(190, 190, 190);
     }
-    .album {
+    .album1{
       width: 100%;
       height: 50px;
       background: #fff;

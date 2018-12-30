@@ -135,8 +135,27 @@ module.exports = {
           })
         })
 
+        app.get('/getDiscItem',function(req,res){
+          const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+          axios.get(url,{
+            params:req.query
+          }).then(response => {
+            res.json(response.data)
+          }).catch(e => {
+            console.log(e)
+          })
+        })
 
-
+        app.get('/getDiscList',function(req,res){
+          const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+          axios.get(url,{
+            params:req.query
+          }).then(response => {
+            res.json(response.data)
+          }).catch(e => {
+            console.log(e)
+          })
+        })
       }
     },
     configureWebpack:{

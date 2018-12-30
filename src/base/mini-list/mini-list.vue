@@ -43,6 +43,9 @@ export default {
             }
         },
         setFavorite(song){
+            if(!song.url){
+                return
+            }
             let m = isFavorite(song.mid);
             if(m){
                 this.DELETE_FAVORITE(song);
@@ -52,6 +55,9 @@ export default {
             this.REFRESH_MYALBUM();
         },
         _selectSong(song,index){
+            if(!song.url){
+                return
+            }
             this.$emit("selectSong",song,index);
         },
         deleteSong(index){

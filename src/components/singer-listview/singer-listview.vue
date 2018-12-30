@@ -102,21 +102,27 @@ export default {
     }
     .search-singer{
         padding: 5px 20px;
-        background: @color-theme;
+        background: #fff;
         position: absolute;
         top: 0;
         box-sizing: border-box;
         width: 100%;
         z-index: 99;
-        input{
-            width: 100%;
-            height: 27px;
-            background: @color-theme-d;
-            color:@color-text-ll;
-            border-radius: 3px;
-            text-align: center;
-        }
-        .placeholderStyle();
+        input {
+      width: 100%;
+      height: 27px;
+      line-height: 27px;
+      background: rgb(236, 236, 236);
+      border-radius: 3px;
+      color:#000;
+      padding: 0 25px;
+      box-sizing: border-box;
+    }
+    input::-webkit-input-placeholder {
+      color: @color-text-d;
+      font-size: @font-size-medium;
+      text-align: center;
+    }
     }
     .singerList{
         padding: 0 20px;
