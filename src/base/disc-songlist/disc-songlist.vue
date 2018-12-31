@@ -7,7 +7,7 @@
             <li v-for="(song,index) in filterList" :class="{'c-song':(currentSong && song.id === currentSong.id),'rank-index':rank,'noUrl':!song.url}" :key="index" @touchstart.once="audioPlay(song)" @click="selectSong(song,index,filterList)">
                 <div class="index"><div class="index1">{{index+1}}</div><div class="rank" v-if="rank">{{song.rank}}</div></div>
                 <div class="text">
-                    <span class="name">{{song.name | filterCurrent(song.id,currentSong.id,song.url)}}</span>
+                    <span class="name" v-html="filterCurrent(song.name,{id:[song.id,currentSong.id],mid:[song.mid,currentSong.mid],url:song.url})"></span>
                     <span class="singer">{{song.singer}}-《{{song.album}}》</span>
                 </div>
                 <i class="icon-more" @click.stop="selectMore(song,index)"></i>

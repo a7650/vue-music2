@@ -5,7 +5,7 @@
         <span
           class="song-name"
           :class="{'c-song':(currentSong && song.id === currentSong.id)}"
-          v-html="filterSong(song.name,song.id,currentSong.id,song.url)"
+          v-html="filterCurrent(song.name,{id:[song.id,currentSong.id],mid:[song.mid,currentSong.mid],url:song.url})"
         ></span>
         <span class="singer" v-html="'-'+song.singer"></span>
         <span class="icon">
@@ -24,7 +24,7 @@ import {isFavorite} from 'common/js/favorite'
 
 export default {
     computed:{
-        
+
         ...mapGetters([
             "playList",
             "currentIndex",
@@ -62,17 +62,6 @@ export default {
         },
         deleteSong(index){
             this.$emit("deleteSong",index);
-        },
-        filterSong(val,id1,id2,url){
-            if(!url){
-                return `${val}(暂无音源)`
-            }
-            if(id1 === id2){
-                return `${val}(正在播放)`
-            }
-            else{
-                return val;
-            }
         },
         ...mapMutations([
             "ADD_FAVORITE",

@@ -81,9 +81,9 @@ const mutations = {
 
     [types.NEXT_PLAY](state,song){
         let newSong = Object.assign({},song);
+        newSong.id2 = song.id;
         newSong.id = Symbol();
         newSong.getLyric = song.getLyric;
-        console.log(newSong);
         state.playList.splice(state.currentIndex+1,0,newSong);
         if(state.playList.length===1){
             state.currentIndex = 0;

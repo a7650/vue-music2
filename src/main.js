@@ -16,17 +16,25 @@ Vue.use(lazyload,{
   attempt:3
 })
 
-Vue.filter("filterCurrent",(val,id1,id2,url) => {
-  if(!url){
-    return `${val}(暂无音源)`
+Vue.prototype.filterCurrent=function(val,playload){
+  switch (true){
+    case !playload.url : 
+      return `${val}(暂无音源)`;
+    case !(playload.id[0]&&playload.id[1]) : 
+      if(playload.mid[0]===playload.mid[1]){
+        return `${val}(正在播放)`
+      }else{
+        return val
+      }
+    case !!playload.id[0] :
+      if(playload.id[0]===playload.id[1]){
+        return `${val}(正在播放)`
+      }else{
+        return val
+      }
+    default : return val
   }
-  if(id1 === id2){
-      return `${val}(正在播放)`
-  }
-  else{
-      return val;
-  }
-})
+}
 
 
 

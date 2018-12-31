@@ -426,9 +426,12 @@ export default {
   },
   watch: {
     currentSong(newSong, oldSong) {
-      if (!newSong.id || !newSong.url || newSong.id === oldSong.id) {
-        this.nextSong()
-        return;
+      if (newSong.mid === oldSong.mid && newSong.id === oldSong.id) {
+        return
+      }
+      if(!newSong.mid || !newSong.url){
+        this.nextSong();
+        return
       }
 
       this.readyPlay = false;

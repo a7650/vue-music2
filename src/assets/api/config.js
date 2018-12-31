@@ -11,4 +11,4 @@ export const options = {
   prefix: 'jp'
 }
 
-export const PRODUCTION = true;
+export const PRODUCTION = false;

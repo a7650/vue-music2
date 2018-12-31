@@ -58,8 +58,9 @@ export function getCreateAlbum(val){
    if(val){
     let album = storage.get(CREATEALBUM_KEY,[]);
     if(album.length === 0){
-        storage.set(CREATEALBUM_KEY,[{name:"我的收藏",bgImg:'./default.png',desc:"这个歌单是由系统生成的默认收藏歌单",songList:[]}]);
-        getCreateAlbum(val);
+        let f = {name:"我的收藏",bgImg:'./default.png',desc:"这个歌单是由系统生成的默认收藏歌单",songList:[]};
+        storage.set(CREATEALBUM_KEY,[f]);
+        return f;
 
     }
     else{
@@ -222,8 +223,12 @@ export function getPlayHistory(){
     return storage.get(PLAYHISTORY_KEY,[]);
 }
 export function setPlayHistory(song){
+    let newSong = Object.assign({},song);
+    if(song.id2){
+        newSong.id = song.id2;
+    }
     let all = getPlayHistory();
-    let newall = resetArray(all,song,item=>item.mid===song.mid,500);
+    let newall = resetArray(all,newSong,item=>item.mid===song.mid,200);
     storage.set(PLAYHISTORY_KEY,newall)
 }
 
