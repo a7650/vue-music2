@@ -2,7 +2,7 @@
   <rtol>
     <div class="rank-detail">
       <div class="bg" ref="bg" :style="bgStyle"></div>
-      <Header :title="title" :icon="'icon-list'" @clickMore="clickMore"></Header>
+      <Header :title="title" :icon="'icon-list'" @clickMore="clickMore" @clickTitle="turnTop"></Header>
       <div class="bar" ref="bar">
         <div class="play" v-if="date">
           <i class="icon-play"></i>
@@ -52,13 +52,13 @@ import { formateHot } from "common/js/tools";
 import Header from "base/header/header";
 import scroll from "base/scroll/scroll";
 import songList from "base/disc-songlist/disc-songlist";
-import { adaptMiniPlay,float } from "common/js/mixin";
+import { adaptMiniPlay, float } from "common/js/mixin";
 import loading from "base/loading/loading";
 import songHandle from "base/songHandle/songHandle";
 import Float from "base/float/float";
 import filterBg from "base/filter-bg/filter-bg";
 export default {
-  mixins: [adaptMiniPlay,float],
+  mixins: [adaptMiniPlay, float],
   data() {
     return {
       songList: [],
@@ -91,6 +91,9 @@ export default {
     filterBg
   },
   methods: {
+    turnTop() {
+      this.$refs.songContent.scrollTo(0, 0, 500);
+    },
     clickMore() {
       this.SET_RANKBAR(true);
     },
@@ -127,14 +130,6 @@ export default {
           return;
         }
         this.songList = this._encaseSongList(data.songlist);
-        // console.log("--------------------------------------------------")
-        // console.log("详情信息");
-        // console.log(data);
-        // console.log("歌曲列表");
-        // console.log(this.songList);
-        // console.log("当前歌手");
-        // console.log(this.singer);
-        // console.log("--------------------------------------------------")
       });
     },
     _encaseSongList(list) {
@@ -156,9 +151,11 @@ export default {
         let item = result[j];
         getSongVkey(item.mid).then(res => {
           let vkey = res.data.items[0].vkey;
-          item.url = `http://dl.stream.qqmusic.qq.com/C400${
-            item.mid
-          }.m4a?fromtag=38&guid=5931742855&vkey=${vkey}`;
+          item.url = vkey
+            ? `http://dl.stream.qqmusic.qq.com/C400${
+                item.mid
+              }.m4a?fromtag=38&guid=5931742855&vkey=${vkey}`
+            : "";
         });
       }
       return result;
@@ -169,16 +166,16 @@ export default {
         index
       });
     },
-    _selectMore(song){
-        this.currentSelect = song;
-        this.songHanders = true;
+    _selectMore(song) {
+      this.currentSelect = song;
+      this.songHanders = true;
     },
-    _closeSongHandles(val){
-        if(val){
-            this.mixin_float(val);
-        }
-        this.currentSelect = null;
-        this.songHanders = false;
+    _closeSongHandles(val) {
+      if (val) {
+        this.mixin_float(val);
+      }
+      this.currentSelect = null;
+      this.songHanders = false;
     },
     ...mapMutations(["SET_RANKBAR"]),
     ...mapActions(["selectSong"])
@@ -204,7 +201,7 @@ export default {
 
 <style lang="less" scoped>
 .rank-detail {
-  animation-duration: 0.3s;
+  animation-duration: 0.2s;
   position: fixed;
   top: 0;
   left: 0;

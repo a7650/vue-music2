@@ -1,12 +1,9 @@
 import jsonp from 'common/js/jsonp'
-import {_getLyric} from 'api/song'
-import {Base64} from 'js-base64'
+import { _getLyric } from 'api/song'
+import { Base64 } from 'js-base64'
 
-
-
-
-export default class song{
-    constructor({id, mid, singer, name, album, duration, image, url,rank}){
+export default class song {
+    constructor({ id, mid, singer, name, album, duration, image, url, rank }) {
         this.id = id
         this.mid = mid
         this.singer = singer
@@ -19,18 +16,18 @@ export default class song{
         this.rank = rank
     }
 
-    getLyric(){
-        if(this.lyric){
+    getLyric() {
+        if (this.lyric) {
             return Promise.resolve(this.lyric)
         }
-        else{
-            return new Promise((resolve,reject) => {
+        else {
+            return new Promise((resolve, reject) => {
                 _getLyric(this.mid).then(data => {
-                    if(data.retcode == 0){
+                    if (data.retcode == 0) {
                         this.lyric = Base64.decode(data.lyric);
                         resolve(this.lyric);
                     }
-                    else{
+                    else {
                         reject("暂无歌词")
                     }
                 })
@@ -41,7 +38,7 @@ export default class song{
 
 
 
-export function createSong(musicData,vkey,r){
+export function createSong(musicData, vkey, r) {
     return new song({
         id: musicData.songid,
         mid: musicData.songmid,
@@ -50,22 +47,22 @@ export function createSong(musicData,vkey,r){
         album: musicData.albumname,
         duration: musicData.interval,
         image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
-        url:"",
-        rank:r
+        url: "",
+        rank: r
     })
 }
-export function getLyric(){
-    if(this.lyric){
+export function getLyric() {
+    if (this.lyric) {
         return Promise.resolve(this.lyric)
     }
-    else{
-        return new Promise((resolve,reject) => {
+    else {
+        return new Promise((resolve, reject) => {
             _getLyric(this.mid).then(data => {
-                if(data.retcode == 0){
+                if (data.retcode == 0) {
                     this.lyric = Base64.decode(data.lyric);
                     resolve(this.lyric);
                 }
-                else{
+                else {
                     reject("暂无歌词")
                 }
             })
@@ -75,11 +72,11 @@ export function getLyric(){
 
 
 
-function filterSinger(singer){
-    if(!singer){
+function filterSinger(singer) {
+    if (!singer) {
         return ''
     }
-    return singer.map(function(item){
+    return singer.map(function (item) {
         return item.name
     }).join("/");
 }
@@ -104,22 +101,22 @@ export function getSongVkey(songmid) {
 }
 
 
-export function _encaseSongList(list,data){
-    let result=[];
+export function _encaseSongList(list, data) {
+    let result = [];
     list.forEach((item) => {
         let ITEM = item;
-        if(data){
-             ITEM = item[data]
+        if (data) {
+            ITEM = item[data]
         }
-        if (ITEM.songid && ITEM.songmid){
+        if (ITEM.songid && ITEM.songmid) {
             result.push(createSong(ITEM))
         }
     })
-    result.forEach((item)=>{
-            getSongVkey(item.mid).then((res) => {
-                let vkey = res.data.items[0].vkey;
-                item.url =vkey?`http://dl.stream.qqmusic.qq.com/C400${item.mid}.m4a?fromtag=38&guid=5931742855&vkey=${vkey}`:"";
-            })
+    result.forEach((item) => {
+        getSongVkey(item.mid).then((res) => {
+            let vkey = res.data.items[0].vkey;
+            item.url = vkey ? `http://dl.stream.qqmusic.qq.com/C400${item.mid}.m4a?fromtag=38&guid=5931742855&vkey=${vkey}` : "";
+        })
     })
     return result;
 }

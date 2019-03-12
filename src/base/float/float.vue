@@ -33,25 +33,25 @@ export default {
     color: #fff;
   }
 }
-.float-enter-active{
-    animation: bounce .5s;
+.float-enter-active {
+  animation: bounce 0.5s;
 }
-.float-leave-active{
-    transition: .3s;
+.float-leave-active {
+  transition: 0.3s;
 }
-.float-leave-to{
+.float-leave-to {
+  opacity: 0;
+}
+@keyframes bounce {
+  0% {
     opacity: 0;
-}
-@keyframes bounce{
-    0%{
-        opacity: 0;
-        transform: scale(0)
-    }
-    50%{
-        transform: scale(1.1)
-    }
-    100%{
-        transform: scale(1)
-    }
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>

@@ -18,58 +18,52 @@
 </template>
 
 <script>
-import { mapGetters,mapMutations } from 'vuex'
-import {isFavorite} from 'common/js/favorite'
-
+import { mapGetters, mapMutations } from "vuex";
+import { isFavorite } from "common/js/favorite";
 
 export default {
-    computed:{
-
-        ...mapGetters([
-            "playList",
-            "currentIndex",
-            "playMode",
-            "currentSong",
-            "favoriteMid"
-        ])
+  computed: {
+    ...mapGetters([
+      "playList",
+      "currentIndex",
+      "playMode",
+      "currentSong",
+      "favoriteMid"
+    ])
+  },
+  methods: {
+    favoriteIcon(song) {
+      let mid = this.favoriteMid;
+      let m = isFavorite(song.mid);
+      return {
+        "icon-favorite": m,
+        "icon-unfavorite": !m
+      };
     },
-    methods:{
-        favoriteIcon(song){
-            let mid = this.favoriteMid;
-            let m = isFavorite(song.mid);
-            return {
-                "icon-favorite":m,
-                "icon-unfavorite":!m
-            }
-        },
-        setFavorite(song){
-            if(!song.url){
-                return
-            }
-            let m = isFavorite(song.mid);
-            if(m){
-                this.DELETE_FAVORITE(song);
-            }else{
-                this.ADD_FAVORITE(song);
-            }
-            this.REFRESH_MYALBUM();
-        },
-        _selectSong(song,index){
-            if(!song.url){
-                return
-            }
-            this.$emit("selectSong",song,index);
-        },
-        deleteSong(index){
-            this.$emit("deleteSong",index);
-        },
-        ...mapMutations([
-            "ADD_FAVORITE",
-            "DELETE_FAVORITE",
-            "REFRESH_MYALBUM"
-        ])
-    }
-}
+    setFavorite(song) {
+      if (!song.url) {
+        return;
+      }
+      let m = isFavorite(song.mid);
+      if (m) {
+        this.DELETE_FAVORITE(song);
+      } else {
+        this.ADD_FAVORITE(song);
+      }
+      this.REFRESH_MYALBUM();
+    },
+    _selectSong(song, index) {
+      if (!song.url) {
+        return;
+      }
+      this.$emit("selectSong", song, index);
+    },
+    deleteSong(index) {
+      this.$emit("deleteSong", index);
+    },
+    ...mapMutations(["ADD_FAVORITE", "DELETE_FAVORITE", "REFRESH_MYALBUM"])
+  }
+};
 </script>
 
 <style lang="less" scoped>
@@ -82,7 +76,7 @@ ul {
     box-sizing: border-box;
     padding: 10px 5%;
     color: @color-text-d;
-    border-bottom: 1px solid rgba(0, 0, 0, .05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     span {
       box-sizing: border-box;
     }
@@ -111,8 +105,8 @@ ul {
         padding: 7px;
         color: @color-text-d;
       }
-      .icon-favorite{
-          color: red;
+      .icon-favorite {
+        color: red;
       }
     }
   }

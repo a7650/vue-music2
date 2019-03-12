@@ -1,6 +1,5 @@
 import jsonp from 'common/js/jsonp'
 import { commonParams, options, PRODUCTION } from './config'
-import axios from 'axios'
 // g_tk: 5381,
 //     inCharset: 'utf-8',
 //     outCharset: 'utf-8',

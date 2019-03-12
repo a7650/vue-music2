@@ -19,17 +19,18 @@
             </div>
           </div>
           <div class="search-history" v-if="!searchText&&searchHistory.length" key="2">
-              <header>
-                  <span class="title">搜索历史</span>
-                  <span class="clear" @click="clearHistory(true)">清除历史</span>
-              </header>
-              <scroll :data="searchHistory" class="history-content" ref="historyContent">
-                <ul>
-                    <li v-for="(val,index) in searchHistory" :key="index"  @click="selectHotKey(val)">
-                        <span>{{val}}</span><i @click.stop="clearHistory(false,index)" class="icon-false"></i>
-                    </li>
-                </ul>
-              </scroll>
+            <header>
+              <span class="title">搜索历史</span>
+              <span class="clear" @click="clearHistory(true)">清除历史</span>
+            </header>
+            <scroll :data="searchHistory" class="history-content" ref="historyContent">
+              <ul>
+                <li v-for="(val,index) in searchHistory" :key="index" @click="selectHotKey(val)">
+                  <span>{{val}}</span>
+                  <i @click.stop="clearHistory(false,index)" class="icon-false"></i>
+                </li>
+              </ul>
+            </scroll>
           </div>
         </transition-group>
         <scroll
@@ -56,12 +57,15 @@
         </scroll>
       </div>
       <filter-bg v-if="songHanders" @click.native="_closeSongHandles('')"></filter-bg>
-      <song-handle :currentSelect="currentSelect" @closeSongHandles="_closeSongHandles" v-if="songHanders"></song-handle>
+      <song-handle
+        :currentSelect="currentSelect"
+        @closeSongHandles="_closeSongHandles"
+        v-if="songHanders"
+      ></song-handle>
       <alert v-if="alert" :message="alertMessage" @alertButton="alertButton" :button="button"></alert>
       <Float :float_message="float_message" v-if="float"></Float>
     </div>
   </transition>
-  
 </template>
 
 <script>
@@ -69,17 +73,17 @@ import { getHotKey, search } from "api/search";
 import songList from "base/song-list/song-list";
 import { _encaseSongList } from "common/js/song";
 import scroll from "base/scroll/scroll";
-import { mapActions,mapGetters } from "vuex";
-import { adaptMiniPlay,float } from "common/js/mixin";
+import { mapActions, mapGetters } from "vuex";
+import { adaptMiniPlay, float } from "common/js/mixin";
 import loading from "base/loading/loading";
 import alert from "base/alert/alert";
-import {mapMutations} from 'vuex'
-import songHandle from 'base/songHandle/songHandle'
-import Float from 'base/float/float'
-import filterBg from 'base/filter-bg/filter-bg'
+import { mapMutations } from "vuex";
+import songHandle from "base/songHandle/songHandle";
+import Float from "base/float/float";
+import filterBg from "base/filter-bg/filter-bg";
 const prePage = 20;
 export default {
-  mixins: [adaptMiniPlay,float],
+  mixins: [adaptMiniPlay, float],
   props: ["searchText"],
   data() {
     return {
@@ -96,20 +100,16 @@ export default {
       tip: true,
       tipMessage: "",
       loadingText: "",
-      button:[],
-      songHanders:false,
-      currentSelect:null
+      button: [],
+      songHanders: false,
+      currentSelect: null
     };
   },
   computed: {
     otherNum() {
       return this.totalNum - this.nowNum;
     },
-    ...mapGetters([
-        "playList",
-        "searchHistory"
-    ])
-
+    ...mapGetters(["playList", "searchHistory"])
   },
   components: {
     songList,
@@ -128,7 +128,7 @@ export default {
       let bottom = playList.length > 0 ? "10%" : 0;
       this.$refs.songContent.$el.style.bottom = bottom;
       this.$refs.songContent.refresh();
-      if(this.$refs.historyContent){
+      if (this.$refs.historyContent) {
         this.$refs.historyContent.$el.style.bottom = bottom;
         this.$refs.historyContent.refresh();
       }
@@ -141,76 +141,80 @@ export default {
         this.hotKey = data.data.hotkey.splice(0, 6);
       });
     },
-    _alert(message,button){
+    _alert(message, button) {
       this.button = ["确定"];
-      if(button){
+      if (button) {
         this.button = button;
       }
       this.alertMessage = message;
       this.alert = true;
     },
     alertButton(index) {
-      switch (index){
-        case 0 : this.alert = false;break;
-        case 1 : this.CLEAR_SEARCHHISTORY({flag:true}),this.alert=false;break;
-        default : this.alert = false;
+      switch (index) {
+        case 0:
+          this.alert = false;
+          break;
+        case 1:
+          this.CLEAR_SEARCHHISTORY({ flag: true }), (this.alert = false);
+          break;
+        default:
+          this.alert = false;
       }
     },
-    clearHistory(flag,index){
+    clearHistory(flag, index) {
       // if(!this.searchHistory.length){
       //   this._alert("这里没有历史纪录");
       //   return;
       // }
-      if(flag){
-        this._alert("你将清空所有历史记录",["取消","确定"]);
-      }
-      else{
-        this.CLEAR_SEARCHHISTORY({flag:false,index});
+      if (flag) {
+        this._alert("你将清空所有历史记录", ["取消", "确定"]);
+      } else {
+        this.CLEAR_SEARCHHISTORY({ flag: false, index });
       }
     },
     selectHotKey(k) {
       this.$emit("selectHotKey", k);
       this.SAVE_SEARCHHISTORY(k);
     },
-    _selectZhida(zhida){
-        let singer = {
-            id:zhida.singerid,
-            mid:zhida.singermid,
-            name:zhida.singername,
-            pic:`https://y.gtimg.cn/music/photo_new/T001R300x300M000${zhida.singermid}.jpg?max_age=2592000`
-        };
-        this.$emit("_selectZhida",singer);
+    _selectZhida(zhida) {
+      let singer = {
+        id: zhida.singerid,
+        mid: zhida.singermid,
+        name: zhida.singername,
+        pic: `https://y.gtimg.cn/music/photo_new/T001R300x300M000${
+          zhida.singermid
+        }.jpg?max_age=2592000`
+      };
+      this.$emit("_selectZhida", singer);
     },
     _selectSong(song, index) {
       if (song.url === "") {
         this._alert("这首歌没有音源,版权方要钱，听听别的吧😁");
         return;
       }
-      if(!this.playList.length){
-          this.selectSong({
-            list: [song],
-            index: 0
-          })
-          return
+      if (!this.playList.length) {
+        this.selectSong({
+          list: [song],
+          index: 0
+        });
+        return;
       }
       this.selectSearchSong(song);
-
     },
-    _selectMore(song){
-        if(song.url===""){
-          this._alert("这首歌没有音源,版权方要钱，听听别的吧😁");
-          return;
-        }
-        this.currentSelect = song;
-        this.songHanders = true;
+    _selectMore(song) {
+      if (song.url === "") {
+        this._alert("这首歌没有音源,版权方要钱，听听别的吧😁");
+        return;
+      }
+      this.currentSelect = song;
+      this.songHanders = true;
     },
-    _closeSongHandles(val){
-        if(val){
-            this.mixin_float(val);
-        }
-        this.currentSelect = null;
-        this.songHanders = false;
-        
+    _closeSongHandles(val) {
+      if (val) {
+        this.mixin_float(val);
+      }
+      this.currentSelect = null;
+      this.songHanders = false;
     },
     searchMore() {
       if (this.otherNum <= 0) {
@@ -229,8 +233,8 @@ export default {
         this.nowNum += n;
       });
     },
-    ...mapActions(["selectSong","selectSearchSong"]),
-    ...mapMutations(["SET_SINGER","SAVE_SEARCHHISTORY","CLEAR_SEARCHHISTORY"])
+    ...mapActions(["selectSong", "selectSearchSong"]),
+    ...mapMutations(["SET_SINGER", "SAVE_SEARCHHISTORY", "CLEAR_SEARCHHISTORY"])
   },
   watch: {
     searchText(val) {
@@ -254,7 +258,9 @@ export default {
         search(this.searchText, this.page, prePage, 1).then(data => {
           let song = data.data.song;
           if (data.code !== 0 || !song.list.length) {
-            this.loadingText = this.tipMessage = `搜索不到《${this.searchText}》,换个试试吧`;
+            this.loadingText = this.tipMessage = `搜索不到《${
+              this.searchText
+            }》,换个试试吧`;
             return;
           }
           this.tip = false;
@@ -320,9 +326,9 @@ export default {
     box-sizing: border-box;
     .hot {
       height: 88px;
-        header{
-            color: @color-text-d;
-        }
+      header {
+        color: @color-text-d;
+      }
       .key {
         span {
           display: inline-block;
@@ -335,59 +341,58 @@ export default {
         }
       }
     }
-    .search-history{
+    .search-history {
       position: absolute;
       top: 88px;
       left: 0;
       right: 0;
       bottom: 0;
       box-sizing: border-box;
-      padding:20px;
-        .history-content{
-          position: absolute;
-          left: 0;
-          right: 0;
-          top: 50px;
-          bottom: 0;
-          overflow: hidden;
-          padding: 0 20px;
+      padding: 20px;
+      .history-content {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50px;
+        bottom: 0;
+        overflow: hidden;
+        padding: 0 20px;
+      }
+      header {
+        width: 100%;
+        height: 30px;
+        line-height: 30px;
+        background: #fff;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        span {
+          color: @color-text-d;
+          font-size: @font-size-medium;
         }
-        header{
-            width: 100%;
-            height: 30px;
-            line-height: 30px;
-            background: #fff;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            span{
-                color: @color-text-d;
-                font-size: @font-size-medium;
-            }
-            .title{
-                float: left;
-            }
-            .clear{
-                float: right;
-            }
+        .title {
+          float: left;
         }
-        li{
-            width: 100%;
-            height: 40px;
-            line-height: 40px;
-            box-sizing: border-box;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            span{
-                float: left;
-            }
-            i{
-                display: inline-block;
-                width: 40px;
-                height: 40px;
-                line-height: 40px;
-                float: right;
-                text-align: right;
-            }
-             
+        .clear {
+          float: right;
         }
+      }
+      li {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        box-sizing: border-box;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        span {
+          float: left;
+        }
+        i {
+          display: inline-block;
+          width: 40px;
+          height: 40px;
+          line-height: 40px;
+          float: right;
+          text-align: right;
+        }
+      }
     }
     .song-content {
       position: absolute;
@@ -399,10 +404,9 @@ export default {
     }
   }
 }
-.search-content-enter-active
-{
+.search-content-enter-active {
   transition: 0.2s;
-  transition-delay: .1s;
+  transition-delay: 0.1s;
 }
 .search-content-enter,
 .search-content-leave-to {

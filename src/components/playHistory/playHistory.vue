@@ -1,23 +1,23 @@
 <template>
-<transition name="playH">
-  <div class="play-history">
-    <scroll :data="songList" ref="songContent" class="song-content">
-      <discSongList
-        ref="songList"
-        :songList="songList"
-        @selectSong="_selectSong"
-        @selectMore="_selectMore"
-      ></discSongList>
-      <filter-bg v-if="songHanders" @click.native="_closeSongHandles('')"></filter-bg>
-      <song-handle
-        :currentSelect="currentSelect"
-        @closeSongHandles="_closeSongHandles"
-        v-if="songHanders"
-      ></song-handle>
-      <Float :float_message="float_message" v-if="float"></Float>
-    </scroll>
-  </div>
-</transition>
+  <transition name="playH">
+    <div class="play-history">
+      <scroll :data="songList" ref="songContent" class="song-content">
+        <discSongList
+          ref="songList"
+          :songList="songList"
+          @selectSong="_selectSong"
+          @selectMore="_selectMore"
+        ></discSongList>
+        <filter-bg v-if="songHanders" @click.native="_closeSongHandles('')"></filter-bg>
+        <song-handle
+          :currentSelect="currentSelect"
+          @closeSongHandles="_closeSongHandles"
+          v-if="songHanders"
+        ></song-handle>
+        <Float :float_message="float_message" v-if="float"></Float>
+      </scroll>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -29,7 +29,7 @@ import Float from "base/float/float";
 import filterBg from "base/filter-bg/filter-bg";
 import { adaptMiniPlay, float } from "common/js/mixin";
 import scroll from "base/scroll/scroll";
-import {getLyric} from 'common/js/song'
+import { getLyric } from "common/js/song";
 export default {
   mixins: [adaptMiniPlay, float],
   components: {
@@ -70,19 +70,19 @@ export default {
       this.currentSelect = null;
       this.songHanders = false;
     },
-    _getPlayHistory(){
+    _getPlayHistory() {
       let allSong = getPlayHistory();
-      this.songList = allSong.map(item=>{
-               item.getLyric=getLyric;
-               return item;
-              });
+      this.songList = allSong.map(item => {
+        item.getLyric = getLyric;
+        return item;
+      });
     },
     ...mapActions(["selectSong"])
   },
   created() {
-     this._getPlayHistory();
+    this._getPlayHistory();
   },
-  activated(){
+  activated() {
     this._getPlayHistory();
   }
 };
@@ -106,11 +106,13 @@ export default {
   }
 }
 
-  .playH-enter-active,.playH-leave-active{
-      transition:.3s;
-    }
-    .playH-enter,.playH-leave-to{
-        left: 100%;
-        right: -100%;
-    }
+.playH-enter-active,
+.playH-leave-active {
+  transition: 0.3s;
+}
+.playH-enter,
+.playH-leave-to {
+  left: 100%;
+  right: -100%;
+}
 </style>

@@ -29,8 +29,8 @@ export default {
   width: 100%;
   text-align: center;
   img {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
   }
   p {
     color: rgb(123, 123, 123);

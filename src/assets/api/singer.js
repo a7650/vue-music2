@@ -1,7 +1,5 @@
-import jsonp from 'common/js/jsonp'
 import {commonParams, options,PRODUCTION} from './config'
 import axios from 'axios'
-
 
 export function getSingerList(){
     const url = PRODUCTION ? 'http://106.12.198.147/music/api/getSingerList' : '/getSingerList';

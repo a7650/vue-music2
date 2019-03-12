@@ -3,80 +3,71 @@ const axios = require('axios')
 const bodyParser = require('body-parser')
 const path = require('path');
 
-function resolve (dir) {
+function resolve(dir) {
   console.log(__dirname)
   return path.join(__dirname, dir)
 }
 module.exports = {
-    lintOnSave: false,
-    //基本路径
-    baseUrl: './',
-    //输出文件目录
-    outputDir: 'dist',
-    //放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录。
-    assetsDir: './',
-    //以多页模式构建应用程序。
-    pages: undefined,
-    //是否使用包含运行时编译器的 Vue 构建版本
-    runtimeCompiler: false,
-    //是否为 Babel 或 TypeScript 使用 thread-loader。该选项在系统的 CPU 有多于一个内核时自动启用，仅作用于生产构建，在适当的时候开启几个子进程去并发的执行压缩
-    parallel: require('os').cpus().length > 1,
-    //生产环境是否生成 sourceMap 文件，一般情况不建议打开
-    productionSourceMap: false,
+  lintOnSave: false,
+  //基本路径
+  baseUrl: './',
+  //输出文件目录
+  outputDir: 'dist',
+  //放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录。
+  assetsDir: './',
+  //以多页模式构建应用程序。
+  pages: undefined,
+  //是否使用包含运行时编译器的 Vue 构建版本
+  runtimeCompiler: false,
+  //是否为 Babel 或 TypeScript 使用 thread-loader。该选项在系统的 CPU 有多于一个内核时自动启用，仅作用于生产构建，在适当的时候开启几个子进程去并发的执行压缩
+  parallel: require('os').cpus().length > 1,
+  //生产环境是否生成 sourceMap 文件
+  productionSourceMap: false,
 
+  devServer: {
+    host: "0.0.0.0",
+    port: 9000,
+    https: false,
+    hotOnly: true,
 
-    
-    
-    
-    
-    
-    devServer:{
-      // host: 'localhost',
-      host: "0.0.0.0",
-      port: 9000, // 端口号
-      https: false, // https:{type:Boolean}
-      hotOnly: true, // 热更新
+    before(app) {
+      app.use(bodyParser.urlencoded({ extended: true }))
 
+      app.get('/getDiscList', function (req, res) {
+        const url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com/portal/playlist.html',
+          },
+          params: req.query
+        }).then((response) => {
+          res.json(response.data)
+        }).catch((e) => {
+          console.log(e)
+        })
+      }),
 
-      before(app) {
-        app.use(bodyParser.urlencoded({extended: true}))
-
-  
-        app.get('/getDiscList', function (req, res) {
-          const url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
+        app.get('/getSingerList', function (req, res) {
+          const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
           axios.get(url, {
             headers: {
-              referer: 'https://y.qq.com/portal/playlist.html',
-            },
-            params: req.query
-          }).then((response) => {
-            res.json(response.data)
-          }).catch((e) => {
-            console.log(e)
-          })
-        }),
-
-        app.get('/getSingerList',function(req,res){
-          const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
-          axios.get(url,{
-            headers:{
               referer: 'https://y.qq.com/portal/singer_list.html'
             },
-            params:req.query
+            params: req.query
           }).then(response => {
-            res.json(response.data)//不设置data会报错 不知道为什么
+            res.json(response.data)//不设置data会报错
           }).catch(e => {
             console.log(e)
           })
         }),
 
-        app.get('/getSongList',function(req,res){
+        app.get('/getSongList', function (req, res) {
           const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg'
-          axios.get(url,{
-            headers:{
+          axios.get(url, {
+            headers: {
               referer: 'https://y.qq.com/n/yqq/singer/'
             },
-            params:req.query
+            params: req.query
           }).then(response => {
             res.json(response.data)
           }).catch(e => {
@@ -84,13 +75,13 @@ module.exports = {
           })
         }),
 
-        app.get('/getLyric',function(req,res){
+        app.get('/getLyric', function (req, res) {
           const url = 'https://szc.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg';
-          axios.get(url,{
-            headers:{
-              referer:'https://y.qq.com/portal/player.html'
+          axios.get(url, {
+            headers: {
+              referer: 'https://y.qq.com/portal/player.html'
             },
-            params:req.query
+            params: req.query
           }).then(response => {
             let data = response.data
             if (typeof data === 'string') {
@@ -106,67 +97,58 @@ module.exports = {
           })
         }),
 
-        app.get('/getDiscSongList',function(req,res){
+        app.get('/getDiscSongList', function (req, res) {
           const url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg'
-          axios.get(url,{
-            headers:{
-              referer:'https://y.qq.com/n/yqq/playsquare'
+          axios.get(url, {
+            headers: {
+              referer: 'https://y.qq.com/n/yqq/playsquare'
             },
-            params:req.query
+            params: req.query
           }).then(response => {
             res.json(response.data)
           }).catch(e => {
             console.log(e);
           })
         })
-        
-        app.get('/getSearch',function(req,res){
-          const url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
-          axios.get(url,{
-            headers:{
-              origin:'https://y.qq.com',
-              referer:'https://y.qq.com/m/index.html',
-            },
-            params:req.query
-          }).then(response => {
-            res.json(response.data)
-          }).catch(e => {
-            console.log(e)
-          })
-        })
 
-        app.get('/getDiscItem',function(req,res){
-          const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
-          axios.get(url,{
-            params:req.query
-          }).then(response => {
-            res.json(response.data)
-          }).catch(e => {
-            console.log(e)
-          })
+      app.get('/getSearch', function (req, res) {
+        const url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
+        axios.get(url, {
+          headers: {
+            origin: 'https://y.qq.com',
+            referer: 'https://y.qq.com/m/index.html',
+          },
+          params: req.query
+        }).then(response => {
+          res.json(response.data)
+        }).catch(e => {
+          console.log(e)
         })
+      })
 
-        app.get('/getDiscList',function(req,res){
-          const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
-          axios.get(url,{
-            params:req.query
-          }).then(response => {
-            res.json(response.data)
-          }).catch(e => {
-            console.log(e)
-          })
+      app.get('/getDiscItem', function (req, res) {
+        const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+        axios.get(url, {
+          params: req.query
+        }).then(response => {
+          res.json(response.data)
+        }).catch(e => {
+          console.log(e)
         })
+      })
+
+
+    }
+  },
+  configureWebpack: {
+    resolve: {
+      alias: {
+        'src': resolve('src'),
+        'common': resolve('src/assets/common'),
+        'components': resolve('src/components'),
+        'api': resolve('src/assets/api'),
+        'base': 'src/base'
       }
-    },
-    configureWebpack:{
-        resolve: {
-          alias: {
-            'src':resolve('src'),
-            'common':resolve('src/assets/common'),
-            'components':resolve('src/components'),
-            'api':resolve('src/assets/api'),
-            'base':'src/base'
-          }
-        }
-      }
+    }
+  }
 }

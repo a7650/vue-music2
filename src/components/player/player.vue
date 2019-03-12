@@ -88,24 +88,28 @@
     </player-animation>
 
     <!-- mini-player -->
-    <div class="mini-player" v-show="!fullScreen" @click="showMainPlayer">
-      <div class="mini-img">
-        <div>
-          <div class="mini-bg" :class="cdRotate" :style="bgStyle"></div>
+    <transition name="mini">
+      <div class="mini-player" v-show="!fullScreen" @click="showMainPlayer">
+        <div class="mini-img">
+          <div>
+            <div class="mini-bg" :class="cdRotate" :style="bgStyle"></div>
+          </div>
+        </div>
+        <div class="song-desc">
+          <span class="name" v-html="currentSong.name"></span>
+          <span class="singer" v-html="currentSong.singer"></span>
+        </div>
+        <div class="icon">
+          <i :class="miniPlayingIcon" @click.stop="togglePlaying"></i>
+          <i class="icon-list" @click.stop="listShow=!listShow"></i>
         </div>
       </div>
-      <div class="song-desc">
-        <span class="name" v-html="currentSong.name"></span>
-        <span class="singer" v-html="currentSong.singer"></span>
-      </div>
-      <div class="icon">
-        <i :class="miniPlayingIcon" @click.stop="togglePlaying"></i>
-        <i class="icon-list" @click.stop="listShow=!listShow"></i>
-      </div>
-    </div>
+    </transition>
 
     <!-- mini-list -->
-    <div class="list-bg" v-show="listShow" @click="listShow=false"></div>
+    <transition name="list-bg">
+      <div class="list-bg" v-show="listShow" @click="listShow=false"></div>
+    </transition>
     <mini-list-animation>
       <div class="mini-list" v-if="listShow">
         <header>
@@ -142,7 +146,7 @@ import { playMode } from "common/config";
 import { shuffle } from "common/js/tools";
 import processBar from "base/process-bar/process-bar";
 import Lyric from "lyric-parser";
-import {isFavorite} from 'common/js/favorite'
+import { isFavorite } from "common/js/favorite";
 import { setPlayHistory } from "common/js/cache";
 const MIN_DISTANCE = 0.2;
 
@@ -160,13 +164,13 @@ export default {
     };
   },
   computed: {
-    favoriteIcon(){
+    favoriteIcon() {
       let mid = this.favoriteMid;
       let m = isFavorite(this.currentSong.mid);
       return {
-        "icon-favorite":m,
-        "icon-unfavorite":!m
-      }
+        "icon-favorite": m,
+        "icon-unfavorite": !m
+      };
     },
     bgStyle() {
       return { "background-image": `url(${this.currentSong.image})` };
@@ -215,11 +219,11 @@ export default {
     scroll
   },
   methods: {
-    setFavorite(){
+    setFavorite() {
       let m = isFavorite(this.currentSong.mid);
-      if(m){
+      if (m) {
         this.DELETE_FAVORITE(this.currentSong);
-      }else{
+      } else {
         this.ADD_FAVORITE(this.currentSong);
       }
       this.REFRESH_MYALBUM();
@@ -327,7 +331,7 @@ export default {
             return;
           }
           this.currentLyric = new Lyric(lyric, this.handleLyric);
-          if(!this.currentLyric.lines.length){
+          if (!this.currentLyric.lines.length) {
             this.currentLyric.stop();
             this.currentLyric = null;
             this.noLyric = true;
@@ -337,7 +341,6 @@ export default {
             this.currentLyric.play();
             this.currentLyric.seek(this.nowTime * 1000);
           }
-          // console.log(this.currentLyric);
         })
         .catch(() => {
           this.noLyric = true;
@@ -427,11 +430,11 @@ export default {
   watch: {
     currentSong(newSong, oldSong) {
       if (newSong.mid === oldSong.mid && newSong.id === oldSong.id) {
-        return
+        return;
       }
-      if(!newSong.mid || !newSong.url){
+      if (!newSong.mid || !newSong.url) {
         this.nextSong();
-        return
+        return;
       }
 
       this.readyPlay = false;
@@ -447,17 +450,7 @@ export default {
       this.$refs.audio.src = newSong.url;
       this.$refs.audio.play();
       this.SET_PLAYING(true);
-      setPlayHistory(this.currentSong)
-      // if(this.timer){clearTimeout(this.timer)}
-      // this.timer = setTimeout(() => {
-      //     if(this.currentLyric){
-      //         this.currentLyric.seek(this.nowTime*1000)
-      //         if(!this.playing){
-      //             this.currentLyric.toggle();
-      //         }
-      //         this.timer = null;
-      //     }
-      // }, 5000);
+      setPlayHistory(this.currentSong);
       if (this.timer2) {
         clearTimeout(this.timer2);
       }
@@ -465,9 +458,6 @@ export default {
         this.ready = true;
         this.timer2 = null;
       }, 1000);
-
-      // clearTimeout(this.timer);
-      // this.comNowTime();
     },
     playing() {
       this.$nextTick(() => {
@@ -478,12 +468,20 @@ export default {
           audio.pause();
         }
       });
-    },
-    fullScreen() {
-      if (this.playing && this.fullScreen && this.currentLyric) {
-        this.currentLyric.seek(this.nowTime * 1000);
-      }
     }
+    // fullScreen(n,o) {
+    // if(n&&this.currentLyric){
+    //   this.currentLyric.seek(this.nowTime * 1000);
+    // if(!this.playing){
+    //   this.currentLyric.toggle();
+    // }
+    //   setTimeout(() => {
+    //     let el = this.$refs.lyricList[this.lyricLine];
+    //     this.$refs.lyricLists.scrollTo(0,200);
+    //     console.log(el.innerHTML)
+    //   }, 0);
+    // }
+    // }
   },
   created() {
     this.touch = {};
@@ -514,7 +512,7 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: rgb(109, 109, 109);
-  animation-duration: 0.3s;
+  transition: 0.3s;
   .bg {
     position: fixed;
     width: 100%;
@@ -754,7 +752,6 @@ export default {
     }
   }
 }
-
 .mini-player {
   position: fixed;
   top: 92%;
@@ -767,6 +764,7 @@ export default {
   display: flex;
   align-items: center;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
   .mini-img {
     width: 10%;
     height: 0;
@@ -836,30 +834,31 @@ export default {
   bottom: 0;
   right: 0;
   background: rgba(0, 0, 0, 0.3);
+  transition: 0.5s;
 }
-
+.list-bg-enter,
+.list-bg-leave-to {
+  opacity: 0;
+}
 .mini-list {
   z-index: 101;
-  position: fixed;
+  position: absolute;
   top: 30%;
   left: 0;
   right: 0;
   bottom: 0;
   background: rgba(255, 255, 255, 0.95);
-  animation-duration: 0.3s;
- 
+  transition: 0.3s;
   header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 93%;
+    height: 30px;
+    width: 100%;
+    box-sizing: border-box;
     padding: 0 5%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     color: #000;
-     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     div {
       flex: 1;
     }
@@ -875,7 +874,7 @@ export default {
   }
   .list-content {
     position: absolute;
-    top: 7%;
+    top: 30px;
     left: 0;
     right: 0;
     bottom: 10%;
@@ -902,5 +901,10 @@ export default {
   100% {
     transform: rotate(360deg);
   }
+}
+.mini-enter,
+.mini-leave-to {
+  top: 100%;
+  bottom: -8%;
 }
 </style>

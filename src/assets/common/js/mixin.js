@@ -1,39 +1,39 @@
-import {mapGetters,mapMutations,mapActions} from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 export const adaptMiniPlay = {
-    computed:{
+    computed: {
         ...mapGetters([
             "playList"
         ])
     },
-    watch:{
-        playList(newList){
+    watch: {
+        playList(newList) {
             this.adaptMiniPlay(newList)
         }
     },
-    mounted(){
+    mounted() {
         this.adaptMiniPlay(this.playList)
     },
-    activated(){
+    activated() {
         this.adaptMiniPlay(this.playList)
     },
-    methods:{
-        adaptMiniPlay(){
+    methods: {
+        adaptMiniPlay() {
             throw new Error("You need to define a 'adaptMiniPlay' function ")
         }
     }
 }
 
 export const float = {
-    data(){
+    data() {
         return {
-            float:false,
-            float_message:"",
-            float_time:2000
+            float: false,
+            float_message: "",
+            float_time: 2000
         }
     },
-    methods:{
-        mixin_float(message){
-            if(this.float){
+    methods: {
+        mixin_float(message) {
+            if (this.float) {
                 this.float = false;
                 clearTimeout(this.float_timer);
             }

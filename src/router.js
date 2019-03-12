@@ -1,15 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import rank from 'components/rank/rank'
-import singer from 'components/singer/singer'
-import recommend from 'components/recommend/recommend'
-import mine from 'components/mine/mine'
-import singerDetail from 'components/singer-detail/singer-detail'
-import discDetail from 'components/disc-detail/disc-detail'
-import rankDetail from 'components/rank-detail/rank-detail'
-import myAlbum from 'components/myAlbum/myAlbum'
-import playHistory from 'components/playHistory/playHistory' 
-import myAlbumDetail from 'components/myAlbum/myalbum-detail'
+
+
+const rank = () => import('components/rank/rank')
+const singer = () => import('components/singer/singer')
+const recommend = () => import('components/recommend/recommend')
+const mine = () => import('components/mine/mine')
+const singerDetail = () => import('components/singer-detail/singer-detail')
+const discDetail = () => import('components/disc-detail/disc-detail')
+const rankDetail = () => import('components/rank-detail/rank-detail')
+const myAlbum = () => import('components/myAlbum/myAlbum')
+const playHistory = () => import('components/playHistory/playHistory')
+const myAlbumDetail = () => import('components/myAlbum/myalbum-detail')
+
 Vue.use(Router)
 
 export default new Router({
@@ -44,16 +47,16 @@ export default new Router({
     {
       path: '/mine',
       component: mine,
-      redirect:'/mine/myAlbum',
+      redirect: '/mine/myAlbum',
       children: [
         {
           path: '/mine/myAlbum',
           component: myAlbum,
-          children:[
+          children: [
             {
-              name:'myAlbumDetail',
+              name: 'myAlbumDetail',
               path: ':id',
-              component:myAlbumDetail
+              component: myAlbumDetail
             },
             {
               name: 'collectAlbumDetail',
@@ -63,8 +66,8 @@ export default new Router({
           ]
         },
         {
-          path:'/mine/playHistory',
-          component:playHistory
+          path: '/mine/playHistory',
+          component: playHistory
         }
       ]
     },

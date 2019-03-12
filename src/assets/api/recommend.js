@@ -42,29 +42,7 @@ export function getDiscList(id){
     return Promise.resolve(list);
   })
 }
-export function getDiscList_() {
-  const url = PRODUCTION ? 'http://106.12.198.147/music/api/getDiscList' : '/getDiscList';
-  const data = Object.assign({}, commonParams, {
-    picmid: 1,
-    rnd: 0.3907097673865849,
-    loginUin: 0,
-    hostUin: 0,
-    notice: 0,
-    platform: "yqq",
-    needNewCode: 0,
-    categoryId: 165,
-    sortId: 2,
-    sin: 0,
-    ein: 29,
-    format: "json"
-  });
-  return axios.get(url, {
-    params: data
-  }).then((res) => {
-    let list = res.data.data.list;
-    return Promise.resolve(list);
-  })
-}
+
 
 export function getRadioList() {
   const url = "https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg";

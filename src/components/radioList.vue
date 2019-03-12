@@ -1,14 +1,12 @@
 <template>
-    <div class="radio">
-        radiolist
-    </div>
+  <div class="radio">radiolist</div>
 </template>
 
 
 <script>
 export default {
-    created(){
-        alert("radio created");
-    }
-}
+  created() {
+    alert("radio created");
+  }
+};
 </script>

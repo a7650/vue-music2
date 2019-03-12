@@ -1,23 +1,23 @@
-import {getCreateAlbum,setCreateAlbum,deleteFromAlbum} from 'common/js/cache'
+import { getCreateAlbum, setCreateAlbum, deleteFromAlbum } from 'common/js/cache'
 
-export function getFavorite(){
+export function getFavorite() {
     return getCreateAlbum("我的收藏");
 }
 
-export function getFavoriteMid(){
+export function getFavoriteMid() {
     let a = getFavorite();
-    let l = a.songList.map(song => {return song.mid});
+    let l = a.songList.map(song => { return song.mid });
     return l;
 }
 
-export function addFavorite(song){
-    setCreateAlbum("我的收藏",song);
+export function addFavorite(song) {
+    setCreateAlbum("我的收藏", song);
 }
 
-export function deleteFavorite(song){
-    deleteFromAlbum("我的收藏",song);
+export function deleteFavorite(song) {
+    deleteFromAlbum("我的收藏", song);
 }
-export function isFavorite(MID){
-    let n = getFavoriteMid().findIndex(mid => mid===MID);
-    return n>-1
+export function isFavorite(MID) {
+    let n = getFavoriteMid().findIndex(mid => mid === MID);
+    return n > -1
 }

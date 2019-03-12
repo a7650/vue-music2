@@ -171,7 +171,7 @@ export default {
 @import "~common/stylus/variable.less";
 @import "~common/stylus/mixin.less";
 .create-album-detail {
-  animation-duration: .3s;
+  animation-duration: .2s;
   position: fixed;
   top: 0;
   left: 0;

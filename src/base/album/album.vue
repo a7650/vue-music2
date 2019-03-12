@@ -46,13 +46,13 @@ export default {
   },
   computed: {
     bgStyle() {
-      let url = this.bgUrl ? this.bgUrl : require("./default.png");
+      let url = this.bgUrl ? this.bgUrl : require("./default.jpg");
       return {
         "background-image": `url(${url})`
       };
     },
     imgUrl() {
-      return this.bgUrl ? this.bgUrl : require("./default.png");
+      return this.bgUrl ? this.bgUrl : require("./default.jpg");
     }
   },
   methods: {
@@ -61,15 +61,8 @@ export default {
       this.$refs.songContent.$el.style.bottom = bottom;
       this.$refs.songContent.refresh();
     },
-    _selectMore(song,index) {
-        this.$emit("_selectMore",song,index);
-    },
-    randomPlay() {
-      let randomList = shuffle(this.songList);
-      this.selectSong({
-        list: randomList,
-        index: 0
-      });
+    _selectMore(song, index) {
+      this.$emit("_selectMore", song, index);
     },
     _selectSong(song, index, filterList) {
       this.selectSong({
@@ -78,6 +71,9 @@ export default {
       });
     },
     randomPlay() {
+      if (!this.songList.length) {
+        return;
+      }
       let randomList = shuffle(this.songList);
       this.selectSong({
         list: randomList,
@@ -108,7 +104,7 @@ export default {
   .bg {
     width: 100%;
     height: 0;
-    padding-top: 70%;
+    padding-top: 60%;
     background-size: 110%;
     position: fixed;
     top: 0;
@@ -118,7 +114,7 @@ export default {
   .filter {
     width: 100%;
     height: 0;
-    padding-top: 70%;
+    padding-top: 60%;
     background-size: 110%;
     position: fixed;
     top: 0;

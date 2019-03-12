@@ -1,29 +1,29 @@
 <template>
   <div class="recommend" ref="recommend">
+    <first-loading v-if="firstLoading"></first-loading>
+    <!-- v-if="firstLoading" -->
     <div class="view-area">
-    <transition name="header">
-    <div class="header" 
-      v-show="!searchShow"
-    >为你推荐</div>
-    </transition>
-    <div class="search" ref="search1">
-      <i class="l icon-search"></i>
-      <input
-        type="text"
-        v-model="searchText"
-        placeholder="搜索"
-        @click="searchShow=true"
-        ref="search"
-      >
-      <i class="r icon-false" @click="clearSearchText" v-if="searchText"></i>
-      <search
-        :searchText="searchText"
-        v-if="searchShow"
-        @closeSearch="searchShow=false;clearSearchText()"
-        @selectHotKey="selectHotKey"
-        @_selectZhida="selectZhida"
-      ></search>
-    </div>
+      <transition name="header">
+        <div class="header" v-show="!searchShow">为你推荐</div>
+      </transition>
+      <div class="search" ref="search1">
+        <i class="l icon-search"></i>
+        <input
+          type="text"
+          v-model="searchText"
+          placeholder="搜索"
+          @click="searchShow=true"
+          ref="search"
+        >
+        <i class="r icon-false" @click="clearSearchText" v-if="searchText"></i>
+        <search
+          :searchText="searchText"
+          v-if="searchShow"
+          @closeSearch="searchShow=false;clearSearchText()"
+          @selectHotKey="selectHotKey"
+          @_selectZhida="selectZhida"
+        ></search>
+      </div>
       <scroll
         class="recommend-content"
         ref="recommendContent"
@@ -33,21 +33,142 @@
       >
         <div class="recommend-songs" ref="recommendSongs">
           <div class="tags">
-            <ul>
-              <li v-for="(a,index) in albumTitle" :key="index"><span @click="changeAlbumIndex(index)" :class="{active:albumIndex===index}">{{a.item_name | filterTitle}}</span></li>             
-            </ul>
+            <scroll class="tags-content" :data="albumTitle" :scrollX="scrollX" :bounce="!scrollX">
+              <ul>
+                <li v-for="(a,index) in albumTitle" :key="index">
+                  <div
+                    @click="changeAlbumIndex(index)"
+                    :class="{active:albumIndex===index}"
+                  >{{a.item_name | filterTitle}}</div>
+                </li>
+              </ul>
+            </scroll>
           </div>
-          <keep-alive><disc v-if="albumIndex===0&&discShow===0" @selectDisc="selectDisc" :discList="discList[0]" :index="albumIndex"></disc></keep-alive>
-          <keep-alive><disc v-if="albumIndex===1&&discShow===1" @selectDisc="selectDisc" :discList="discList[1]" :index="albumIndex"></disc></keep-alive>
-          <keep-alive><disc v-if="albumIndex===2&&discShow===2" @selectDisc="selectDisc" :discList="discList[2]" :index="albumIndex"></disc></keep-alive>
-          <keep-alive><disc v-if="albumIndex===3&&discShow===3" @selectDisc="selectDisc" :discList="discList[3]" :index="albumIndex"></disc></keep-alive>
-          <keep-alive><disc v-if="albumIndex===4&&discShow===4" @selectDisc="selectDisc" :discList="discList[4]" :index="albumIndex"></disc></keep-alive>
-          <keep-alive><disc v-if="albumIndex===5&&discShow===5" @selectDisc="selectDisc" :discList="discList[5]" :index="albumIndex"></disc></keep-alive>
+          <keep-alive>
+            <disc
+              v-if="albumIndex===0&&discShow===0"
+              @selectDisc="selectDisc"
+              :discList="discList[0]"
+              :index="albumIndex"
+            ></disc>
+          </keep-alive>
+          <keep-alive>
+            <disc
+              v-if="albumIndex===1&&discShow===1"
+              @selectDisc="selectDisc"
+              :discList="discList[1]"
+              :index="albumIndex"
+            ></disc>
+          </keep-alive>
+          <keep-alive>
+            <disc
+              v-if="albumIndex===2&&discShow===2"
+              @selectDisc="selectDisc"
+              :discList="discList[2]"
+              :index="albumIndex"
+            ></disc>
+          </keep-alive>
+          <keep-alive>
+            <disc
+              v-if="albumIndex===3&&discShow===3"
+              @selectDisc="selectDisc"
+              :discList="discList[3]"
+              :index="albumIndex"
+            ></disc>
+          </keep-alive>
+          <keep-alive>
+            <disc
+              v-if="albumIndex===4&&discShow===4"
+              @selectDisc="selectDisc"
+              :discList="discList[4]"
+              :index="albumIndex"
+            ></disc>
+          </keep-alive>
+          <keep-alive>
+            <disc
+              v-if="albumIndex===5&&discShow===5"
+              @selectDisc="selectDisc"
+              :discList="discList[5]"
+              :index="albumIndex"
+            ></disc>
+          </keep-alive>
+          <keep-alive>
+            <disc
+              v-if="albumIndex===6&&discShow===6"
+              @selectDisc="selectDisc"
+              :discList="discList[6]"
+              :index="albumIndex"
+            ></disc>
+          </keep-alive>
+          <keep-alive>
+            <disc
+              v-if="albumIndex===7&&discShow===7"
+              @selectDisc="selectDisc"
+              :discList="discList[7]"
+              :index="albumIndex"
+            ></disc>
+          </keep-alive>
+          <keep-alive>
+            <disc
+              v-if="albumIndex===8&&discShow===8"
+              @selectDisc="selectDisc"
+              :discList="discList[8]"
+              :index="albumIndex"
+            ></disc>
+          </keep-alive>
+          <keep-alive>
+            <disc
+              v-if="albumIndex===9&&discShow===9"
+              @selectDisc="selectDisc"
+              :discList="discList[9]"
+              :index="albumIndex"
+            ></disc>
+          </keep-alive>
+          <keep-alive>
+            <disc
+              v-if="albumIndex===10&&discShow===10"
+              @selectDisc="selectDisc"
+              :discList="discList[10]"
+              :index="albumIndex"
+            ></disc>
+          </keep-alive>
+          <keep-alive>
+            <disc
+              v-if="albumIndex===11&&discShow===11"
+              @selectDisc="selectDisc"
+              :discList="discList[11]"
+              :index="albumIndex"
+            ></disc>
+          </keep-alive>
+          <keep-alive>
+            <disc
+              v-if="albumIndex===12&&discShow===12"
+              @selectDisc="selectDisc"
+              :discList="discList[12]"
+              :index="albumIndex"
+            ></disc>
+          </keep-alive>
+          <keep-alive>
+            <disc
+              v-if="albumIndex===13&&discShow===13"
+              @selectDisc="selectDisc"
+              :discList="discList[13]"
+              :index="albumIndex"
+            ></disc>
+          </keep-alive>
+          <keep-alive>
+            <disc
+              v-if="albumIndex===14&&discShow===14"
+              @selectDisc="selectDisc"
+              :discList="discList[14]"
+              :index="albumIndex"
+            ></disc>
+          </keep-alive>
         </div>
       </scroll>
-    <div class="loading-container" v-if="albumIndex!==discShow">
-      <loading></loading>
-    </div>
+      <div class="loading-container" v-if="albumIndex!==discShow">
+        <loading></loading>
+      </div>
     </div>
     <router-view></router-view>
   </div>
@@ -56,14 +177,14 @@
 <script>
 import slider from "base/slider/slider";
 import radio from "components/radioList";
-import { getRadioList ,getDistItem,getDiscList} from "api/recommend";
+import { getRadioList, getDistItem, getDiscList } from "api/recommend";
 import scroll from "base/scroll/scroll";
 import loading from "base/loading/loading";
 import { adaptMiniPlay } from "common/js/mixin";
 import { mapMutations } from "vuex";
 import search from "components/search/search";
 import disc from "components/disc/disc";
-
+import firstLoading from "base/loading/first-loading";
 export default {
   mixins: [adaptMiniPlay],
   data() {
@@ -73,32 +194,18 @@ export default {
       currentDot: -1,
       searchText: "",
       scrollY: 0,
+      scrollX: true,
       searchShow: false,
-      albumIndex:0,
-      albumTitle:[],
-      discShow:""
+      albumIndex: 0,
+      albumTitle: [],
+      discShow: "",
+      firstLoading: true
     };
   },
-  filters:{
-    filterTitle(val){
-      return val.substring(0,2);
+  filters: {
+    filterTitle(val) {
+      return val.substring(0, 2);
     }
-  },
-  computed: {
-    // recommendStyle(){
-    //     return {
-    //         "top" : `${this.sliderHeight}px`
-    //     }
-    // },
-    // sliderFilter() {
-      // if (-this.scrollY > 0 && -this.scrollY < this.sliderHeight) {
-      //   let opacity = this.rang(-this.scrollY, this.sliderHeight, 1);
-      //   return {
-      //     background: `rgba(0,0,0,${opacity})`
-      //   };
-      // }
-      
-    // }
   },
   components: {
     slider,
@@ -106,34 +213,38 @@ export default {
     scroll,
     loading,
     search,
-    disc
+    disc,
+    firstLoading
   },
   methods: {
-    _getDistItem(){
+    _getDistItem() {
       getDistItem().then(data => {
-        this.albumTitle = data.splice(0,6);
+        this.albumTitle = data.splice(0, 15);
         this.changeAlbumIndex(0);
-      })
+      });
     },
-    changeAlbumIndex(index){
+    changeAlbumIndex(index) {
       this.albumIndex = index;
-      if(this.discList[index]&&this.discList[index].length){
+      if (this.discList[index] && this.discList[index].length) {
         this.discShow = index;
-        return
+        return;
       }
       getDiscList(this.albumTitle[index].item_id).then(data => {
-        this.discList[index]=data.map(item => {
-          let {cover_url_medium,title,tid} = item;
+        this.discList[index] = data.map(item => {
+          let { cover_url_medium, title, tid } = item;
           let l = {
-                    imgurl:cover_url_medium,
-                    dissname:title,
-                    dissid:tid,
-                    name:item.creator_info.nick
-                  }
+            imgurl: cover_url_medium,
+            dissname: title,
+            dissid: tid,
+            name: item.creator_info.nick
+          };
           return l;
-        })
+        });
         this.discShow = index;
-      })
+        if (this.firstLoading) {
+          this.firstLoading = false;
+        }
+      });
     },
     selectHotKey(k) {
       this.searchText = k;
@@ -186,20 +297,18 @@ export default {
       this.scrollY = parseInt(pos.y);
       let r = this.$refs.recommendSongs;
       let s = this.$refs.search;
-      if(pos.y<0){
-        r.style.boxShadow = "0 -10px 10px rgba(0,0,0,0.2)";
+      if (pos.y < 0) {
+        r.style.boxShadow = "0 -7px 10px rgba(0,0,0,0.1)";
         s.style.zIndex = "0";
-        if(-pos.y>78){
-          this.$refs.recommend.style.borderTop = "1px solid rgb(221,221,221)"
-        }else{
-          this.$refs.recommend.style.borderTop = "none"
+        if (-pos.y > 78) {
+          this.$refs.recommend.style.borderTop = "1px solid rgb(221,221,221)";
+        } else {
+          this.$refs.recommend.style.borderTop = "none";
         }
-      }
-      else{
+      } else {
         r.style.boxShadow = "none";
         s.style.zIndex = "99";
       }
-
     },
     rang(now, total, max) {
       return Math.min((max * now) / total, max);
@@ -208,20 +317,18 @@ export default {
   },
   created() {
     this._getDistItem();
-  },
-  mounted() {}
+  }
 };
 </script>
 <style lang="less" scoped>
 @import "~common/stylus/variable.less";
 @import "~common/stylus/mixin.less";
-
 .recommend {
   position: fixed;
   width: 100%;
   top: 44px;
-  bottom: 0; 
-  .view-area{
+  bottom: 0;
+  .view-area {
     position: absolute;
     top: 0;
     left: 0;
@@ -229,10 +336,10 @@ export default {
     right: 0;
     overflow: hidden;
   }
-  .header{
+  .header {
     color: #000;
     box-sizing: border-box;
-    padding-left:10px;
+    padding-left: 10px;
     height: 40px;
     line-height: 40px;
     font-size: @font-size-large-x;
@@ -246,7 +353,7 @@ export default {
       line-height: 27px;
       background: rgb(236, 236, 236);
       border-radius: 3px;
-      color:#000;
+      color: #000;
       padding: 0 25px;
       box-sizing: border-box;
     }
@@ -296,48 +403,54 @@ export default {
     text-align: center;
     background: @color-background;
     border-radius: 5px;
-    .tags{
+    .tags {
       height: 50px;
       position: relative;
       box-sizing: border-box;
       padding-top: 10px;
       width: 100%;
-      overflow: hidden;
-      .tags-content{
+      .tags-content {
         position: absolute;
         left: 10px;
         right: 10px;
         top: 10px;
         bottom: 0;
+        overflow: hidden;
       }
-      ul{
-        width: 100%;
-        display: flex;
-        li{
-          flex: 1;
-          span{
+      ul {
+        white-space: nowrap;
+        width: 750px;
+        overflow: auto;
+        li {
+          float: left;
+          margin-right: 10px;
+          div {
             color: #000;
             height: 25px;
+            width: 40px;
+            text-align: center;
+            box-sizing: border-box;
             line-height: 25px;
-            padding:5px;
+            padding: 0 5px;
             font-size: 14px;
           }
-          .active{
-              color: #fff;
-              background-color: #000;
-              border-radius:15px;
-            }
+          .active {
+            color: #fff;
+            background-color: #000;
+            border-radius: 15px;
+          }
         }
       }
     }
-
   }
 }
-.header-enter,.header-leave-to{
+.header-enter,
+.header-leave-to {
   margin-top: -40px;
 }
-.header-enter-active,.header-leave-active{
-  transition: .2s;
+.header-enter-active,
+.header-leave-active {
+  transition: 0.2s;
 }
 </style>
 

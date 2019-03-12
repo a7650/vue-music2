@@ -1,39 +1,42 @@
 <template>
-<transition name="myalbum">
-  <div class="my-album">
-    <scroll class="album-content" ref="albumContent">
-      <div>
-        <div class="my-create-album album">
-          <header>我创建的歌单</header>
-          <div
-            v-for="(item,index) in createAlbum"
-            class="album1"
-            :key="index"
-            @click="selectCreateAlbum(item)"
-          >
-            <img :src="albumBg(item)">
-            <div class="desc"><span class="name">{{item.name}}</span><span class="num">{{item.songList.length}}首</span></div>
-            <i class="icon-right"></i>
+  <transition name="myalbum">
+    <div class="my-album">
+      <scroll class="album-content" ref="albumContent">
+        <div>
+          <div class="my-create-album album">
+            <header>我创建的歌单</header>
+            <div
+              v-for="(item,index) in createAlbum"
+              class="album1"
+              :key="index"
+              @click="selectCreateAlbum(item)"
+            >
+              <img :src="albumBg(item)">
+              <div class="desc">
+                <span class="name">{{item.name}}</span>
+                <span class="num">{{item.songList.length}}首</span>
+              </div>
+              <i class="icon-right"></i>
+            </div>
           </div>
-        </div>
-        <div class="my-collect-album album" v-if="collectAlbum.length">
-          <header>我收藏的歌单</header>
-          <div
-            v-for="(item,index) in collectAlbum"
-            class="album1"
-            :key="index"
-            @click="selectCollectAlbum(item)"
-          >
-            <img :src="albumBg(item)">
-            <div class="desc">{{item.name}}</div>
-            <i class="icon-right"></i>
+          <div class="my-collect-album album" v-if="collectAlbum.length">
+            <header>我收藏的歌单</header>
+            <div
+              v-for="(item,index) in collectAlbum"
+              class="album1"
+              :key="index"
+              @click="selectCollectAlbum(item)"
+            >
+              <img :src="albumBg(item)">
+              <div class="desc">{{item.name}}</div>
+              <i class="icon-right"></i>
+            </div>
           </div>
+          <div v-for="i in refreshAlbum"></div>
         </div>
-        <div v-for="i in refreshAlbum"></div>
-      </div>
-    </scroll>
-    <router-view></router-view>
-  </div>
+      </scroll>
+      <router-view></router-view>
+    </div>
   </transition>
 </template>
 <script>
@@ -41,12 +44,13 @@ import scroll from "base/scroll/scroll";
 import { adaptMiniPlay } from "common/js/mixin";
 import { getCreateAlbum, getCollectAlbum } from "common/js/cache";
 import { mapMutations, mapGetters } from "vuex";
-import rtol from "base/animation/right-to-left"
+import rtol from "base/animation/right-to-left";
 
 export default {
   mixins: [adaptMiniPlay],
   components: {
-    scroll,rtol
+    scroll,
+    rtol
   },
   data() {
     return {
@@ -69,7 +73,7 @@ export default {
     },
     albumBg(item) {
       let url = item.bgUrl;
-      return url ? url : require("base/album/default.png");
+      return url ? url : require("base/album/default.jpg");
     },
     selectCreateAlbum(item) {
       this.$router.push({
@@ -113,7 +117,7 @@ export default {
   bottom: 0;
   right: 0;
   color: #000;
-  
+
   .album-content {
     position: absolute;
     top: 10px;
@@ -132,9 +136,9 @@ export default {
       box-sizing: border-box;
       padding-left: 20px;
       line-height: 30px;
-      color: rgb(190, 190, 190);
+      color: rgb(143, 143, 143);
     }
-    .album1{
+    .album1 {
       width: 100%;
       height: 50px;
       background: #fff;
@@ -156,14 +160,14 @@ export default {
         display: flex;
         flex-direction: column;
         box-sizing: border-box;
-        border-bottom: 1px solid rgba(0, 0, 0, .05);
-        .name{
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        .name {
           height: 30px;
           line-height: 30px;
         }
-        .num{
+        .num {
           flex: 1;
-          font-size:@font-size-medium;
+          font-size: @font-size-medium;
           color: @color-text-d;
         }
       }
@@ -172,23 +176,24 @@ export default {
         height: 49px;
         text-align: left;
         line-height: 50px;
-        border-bottom: 1px solid rgba(0, 0, 0, .05);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         color: rgba(0, 0, 0, 0.4);
       }
     }
   }
-  .my-collect-album{
+  .my-collect-album {
     margin-top: 10px;
-    line-height: 50PX;
+    line-height: 50px;
   }
 }
-    .myalbum-enter-active,.myalbum-leave-active{
-      transition:.3s;
-    }
-    
-    .myalbum-enter,.myalbum-leave-to{
-        left: -100%;
-        right: 100%;
-    }
+.myalbum-enter-active,
+.myalbum-leave-active {
+  transition: 0.3s;
+}
 
+.myalbum-enter,
+.myalbum-leave-to {
+  left: -100%;
+  right: 100%;
+}
 </style>

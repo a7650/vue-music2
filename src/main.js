@@ -12,7 +12,7 @@ Vue.prototype.axios=axios
 Vue.config.productionTip = false
 
 Vue.use(lazyload,{
-  loading:require('common/image/lazyload.png'),
+  loading:require('common/image/lazyload.jpg'),
   attempt:3
 })
 

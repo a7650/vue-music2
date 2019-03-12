@@ -4,17 +4,16 @@
       <div class="back" @click="back">
         <i class="icon-back"></i>
       </div>
-      <h5 class="title" v-html="title"></h5>
+      <h5 class="title" v-html="title" @click="turnTop"></h5>
     </header>
     <div class="wrapper" ref="wrapper" :style="wrapperStyle">
       <div class="bg" ref="bg" :style="bgStyle"></div>
       <div class="filter"></div>
-      <div class="title2">{{title}}</div>
     </div>
     <div class="scroll-area">
-      <div class="play" @click="randomPlay" :style="playStyle">随机播放全部
+      <!-- <div class="play" @click="randomPlay" :style="playStyle">
         <i class="icon-play"></i>
-      </div>
+      </div>-->
       <scroll
         class="song-content"
         ref="songContent"
@@ -22,13 +21,28 @@
         @scroll="scroll"
         :listenScroll="true"
         :probeType="3"
+        :pullUp="pullUp"
+        @scrollToEnd="scrollToEnd"
       >
         <div class="scroll-bg" ref="scrollBg">
-          <song-list :songList="songList" @selectSong="_selectSong" @selectMore="_selectMore"></song-list>
+          <song-list
+            :songList="songList"
+            :loading="hasMore"
+            @selectSong="_selectSong"
+            @selectMore="_selectMore"
+          >
+            <div class="play" @click="randomPlay">
+              <i class="icon-play2"></i>
+            </div>
+          </song-list>
         </div>
         <loading v-if="!songList.length"></loading>
         <filterBg v-if="songHanders" @click.native="_closeSongHandles('')"></filterBg>
-        <songHandle :currentSelect="currentSelect" v-if="songHanders" @closeSongHandles="_closeSongHandles"></songHandle>
+        <songHandle
+          :currentSelect="currentSelect"
+          v-if="songHanders"
+          @closeSongHandles="_closeSongHandles"
+        ></songHandle>
       </scroll>
     </div>
     <Float :float_message="float_message" v-if="float"></Float>
@@ -40,19 +54,20 @@ import scroll from "base/scroll/scroll";
 import SongList from "base/song-list/song-list";
 import loading from "base/loading/loading";
 import { mapActions } from "vuex";
-import { adaptMiniPlay,float } from "common/js/mixin";
+import { adaptMiniPlay, float } from "common/js/mixin";
 import { shuffle } from "common/js/tools";
-import songHandle from  'base/songHandle/songHandle'
-import Float from 'base/float/float'
-import filterBg from 'base/filter-bg/filter-bg'
+import songHandle from "base/songHandle/songHandle";
+import Float from "base/float/float";
+import filterBg from "base/filter-bg/filter-bg";
 export default {
-  mixins: [adaptMiniPlay,float],
+  mixins: [adaptMiniPlay, float],
   data() {
     return {
       scrollY: 0,
       bgHeight: 0,
-      currentSelect:null,
-      songHanders:false
+      currentSelect: null,
+      songHanders: false,
+      pullUp: true
     };
   },
   props: {
@@ -64,6 +79,9 @@ export default {
     },
     songList: {
       type: Array
+    },
+    hasMore: {
+      default: false
     }
   },
   computed: {
@@ -117,18 +135,25 @@ export default {
     filterBg
   },
   methods: {
+    turnTop() {
+      this.$refs.songContent.scrollTo(0, 0, 500);
+    },
+    scrollToEnd() {
+      if (this.hasMore) {
+        this.$emit("getMore");
+      }
+    },
     adaptMiniPlay(playingList) {
       let bottom = playingList.length > 0 ? "10%" : 0;
       this.$refs.songContent.$el.style.bottom = bottom;
       this.$refs.songContent.refresh();
     },
-    _closeSongHandles(val){
-        if(val){
-            this.mixin_float(val);
-        }
-        this.currentSelect = null;
-        this.songHanders = false;
-        
+    _closeSongHandles(val) {
+      if (val) {
+        this.mixin_float(val);
+      }
+      this.currentSelect = null;
+      this.songHanders = false;
     },
     back() {
       this.$router.back();
@@ -142,9 +167,9 @@ export default {
         index
       });
     },
-    _selectMore(song){
-        this.currentSelect = song;
-        this.songHanders = true;
+    _selectMore(song) {
+      this.currentSelect = song;
+      this.songHanders = true;
     },
     randomPlay() {
       let randomList = shuffle(this.songList);
@@ -221,7 +246,7 @@ export default {
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.1);
     }
     .title2 {
       width: 100%;
@@ -239,18 +264,20 @@ export default {
     bottom: 0;
     overflow: hidden;
     .play {
-      width: 150px;
-      height: 25px;
-      border: 1px solid #fff;
-      border-radius: 13px;
+      width: 60px;
+      height: 60px;
+      background-color: #fff;
+      border-radius: 30px;
       text-align: center;
-      line-height: 25px;
-      position: absolute;
-      left: 50%;
-      margin-left: -75px;
-      font-size: 15px;
-      background: rgba(0, 0, 0, 0.5);
-      color: #fff;
+      margin: 0 auto;
+      margin-top: -50px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+      i {
+        display: inline-block;
+        color: #000;
+        font-size: 40px;
+        margin-top: 10px;
+      }
     }
   }
   .song-content {

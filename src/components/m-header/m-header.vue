@@ -9,35 +9,35 @@
 </template>
 
 <script type="text/ecmascript-6">
-  export default {}
+export default {};
 </script>
 
 <style scoped lang="less">
-  @import "~common/stylus/variable.less";
-  @import "~common/stylus/mixin.less";
+@import "~common/stylus/variable.less";
+@import "~common/stylus/mixin.less";
 
-  .m-header{
-    position: relative;
-    height: 44px;
-    text-align: center;
-    color: @color-text;
-    font-size: 0;
-    .text{
-      display: inline-block;
-      vertical-align: top;
-      line-height: 44px;
-      font-size: @font-size-large;
-    }
-    .mine{
-      position: absolute;
-      top: 0;
-      right: 0;
-      .icon-mine{
-        display: block;
-        padding: 12px;
-        font-size: 20px;
-        color: @color-theme;
-      }
+.m-header {
+  position: relative;
+  height: 44px;
+  text-align: center;
+  color: @color-text;
+  font-size: 0;
+  .text {
+    display: inline-block;
+    vertical-align: top;
+    line-height: 44px;
+    font-size: @font-size-large;
+  }
+  .mine {
+    position: absolute;
+    top: 0;
+    right: 0;
+    .icon-mine {
+      display: block;
+      padding: 12px;
+      font-size: 20px;
+      color: @color-theme;
     }
   }
+}
 </style>
